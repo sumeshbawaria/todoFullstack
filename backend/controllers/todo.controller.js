@@ -1,21 +1,9 @@
 import { Todo } from "../model/todo.model.js";
 import { Todolist } from "../model/todoList.model.js";
-import { v4 as uuidv4 } from 'uuid';
+import { v4 as uuidv4 } from "uuid";
 
 const registerTodos = async (req, res) => {
     const { todos } = req.body;
-
-    // todos.forEach(value => {
-    //     for (const key in value) {
-    //         if (key === 'id') console.log(value[key]);
-    //         if (key === 'todo') console.log(value[key]);
-    //         if (key === 'completed') console.log(value[key]);
-    //     }
-    // });
-    // for (let x in todos) {
-    //     console.log(x);
-    // }
-    // console.log(typeof todos);
 
     const listId = uuidv4();
     console.log("list id ; ", listId);
@@ -29,7 +17,7 @@ const registerTodos = async (req, res) => {
     }
 
     for (const value of todos) {
-        const todoMsg = value['todo'];
+        const todoMsg = value['task'];
         const todoCompleted = value['completed'];
 
         const saveTodoData = await Todo.create({
@@ -51,7 +39,34 @@ const registerTodos = async (req, res) => {
 }
 
 const fetchTodos = async (req, res) => {
+    try {
+        const { id } = req.query;
 
+        const todos = await Todo.find({ todoListId: id });
+        if (todos.length > 0) {
+            res.status(200).json(todos);
+        }
+        else {
+            res.status(400).json({ message: "no todo lists found" });
+        }
+    } catch (error) {
+        console.log(error);
+    }
 }
 
-export { registerTodos, fetchTodos }; 
+const fetchTodoLists = async (req, res) => {
+    try {
+        const todolist = await Todolist.find({});
+        // console.log("todo list: ", todolist.length);
+
+        if (todolist.length > 0)
+            res.status(200).json(todolist);
+        else
+            res.status(400).json({ message: "no todo lists found" });
+    } catch (error) {
+        console.error("Error retrieving todo lists: ", error);
+        res.status(500).json({ message: "Failed to retrieve todo list", error });
+    }
+}
+
+export { registerTodos, fetchTodos, fetchTodoLists }; 

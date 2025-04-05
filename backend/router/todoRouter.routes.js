@@ -1,9 +1,10 @@
 import { Router } from "express";
-import { registerTodos, fetchTodos } from "../controllers/todo.controller.js";
+import { registerTodos, fetchTodos, fetchTodoLists } from "../controllers/todo.controller.js";
 
 const router = Router();
 
 router.route("/registerTodo").post(registerTodos);
-router.route("/getTodos").post(fetchTodos)
+router.route("/fetchTodos").get(fetchTodos)
+router.route("/fetchTodoLists").get(fetchTodoLists)
 
 export default router;
