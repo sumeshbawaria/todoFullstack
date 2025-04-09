@@ -1,16 +1,16 @@
-import React, { isValidElement, useEffect, useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import axios from 'axios'
 import TodoForm from './TodoForm.jsx'
 import Todoitem from './Todoitem.jsx'
 import { ToDoProvider } from '../context/ToDoContext.js';
+import { useGlobalContext } from '../context/globalContext.jsx';
 
 function NewTodo() {
   const [todos, setTodos] = useState([]);  
   const [isVissible, setIsVissible] = useState(false)
   const inputRef = useRef(null)
-
-  const containerRef = useRef(null); 
-  // const prevTodosRef = useRef([]);
+  const containerRef = useRef(null);
+  const {postData} = useGlobalContext();
 
   const [checkCompletedTodo,setCheckCompltedTodo] = useState(false);
 
@@ -45,6 +45,10 @@ function NewTodo() {
     setIsVissible((prev) => !prev)
   }
 
+  const handleSaveTodo = async() => {
+    await postData({todos});
+    setTodos([])
+  } 
   useEffect(() => {
     if(isVissible && inputRef.current){
       inputRef.current.focus();
@@ -55,19 +59,11 @@ function NewTodo() {
     setCheckCompltedTodo(todos.some((todo) => todo.completed))
   },[todos])
 
-  const postData = async () => {
-    await axios.post("/api/registerTodo",{todos})
-    .then((response) => {
-      console.log(response);
-      setTodos([]);
-    })
-    .catch((error) => console.log("Error in post todo", error))
-  }
 
   useEffect(() => {
     const handleClickOutside = (e) => {
       if(containerRef.current && !containerRef.current.contains(e.target)) {
-        if(todos.length > 0)postData();
+        if(todos.length > 0)handleSaveTodo();
         setIsVissible(false);
       };
   };
@@ -79,11 +75,10 @@ function NewTodo() {
   return () => {
     document.removeEventListener("mousedown",handleClickOutside);
   };
-},[isVissible,todos])
-
+  },[isVissible,todos,postData]);
 
   return (
-  <ToDoProvider value={{todos, setTodos, addTodo, deleteTodo, toggleComplete, changeTodo}}>
+  <ToDoProvider value={{todos, setTodos, addTodo, deleteTodo, toggleComplete, changeTodo, postData}}>
     <div className='flex items-center justify-center mt-4' >
 
     {!isVissible ? <button className='border-1 py-1 px-3 rounded-lg' onClick={handleNewTodo}>New Todo</button>
@@ -92,7 +87,7 @@ function NewTodo() {
 
       <TodoForm ref={inputRef}/>
         {
-            todos.length > 0 ?
+          todos.length > 0 ?
           <div className=' py-2'>
             {todos.map((todo) => (
               todo.completed === false && 
@@ -101,8 +96,7 @@ function NewTodo() {
               </div>
             ))}
             <div>
-            {checkCompletedTodo &&
-            <h1 className='my-4 mx-3 py-1 border-t border-gray-400'>Completed Tasks</h1>}
+            {checkCompletedTodo && <h1 className='my-4 mx-3 py-1 border-t border-gray-400'>Completed Tasks</h1>}
             {todos.map((todo) => (
               todo.completed === true &&
               <div key={todo.id}>
@@ -115,7 +109,6 @@ function NewTodo() {
           }
     </div>}
     </div>
-
   </ToDoProvider>
   )
 }
