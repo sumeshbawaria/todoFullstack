@@ -47,7 +47,7 @@ function ShowTodo({todo,showOnly}) {
 
                 <input className={`w-fit ml-2 pl-2 grow ${todo.completed ? "cursor-default line-through text-stone-400" : " "} outline-0 border-0`} name='todo' value={todo.task} readOnly={todo.completed} onChange={handleChange} onBlur={handleBlur} autoComplete='off' onKeyDown={handleKeyDown}/>
             
-                <div className='flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-30'>
+                <div className='flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200'>
                     <button className='mx-1 p-0.5 rounded-sm self-start' onClick={remove}>  
                         <img src={cancel} alt="" height={"20px"} width={'20px'}/></button>
                     </div>
