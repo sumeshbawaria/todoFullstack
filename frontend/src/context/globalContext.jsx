@@ -1,0 +1,68 @@
+import { createContext, useCallback, useContext, useEffect, useState } from "react";
+import axios from "axios"
+const GlobalContext = createContext();
+
+export const GlobalTodoProvider = ({ children }) => {
+    const [todoLists, setTodoLists] = useState([]);
+
+    const fetchTodoLists = useCallback(async () => {
+        try {
+            const response = await axios.get("/api/fetchTodoLists");
+            setTodoLists(response.data);
+        } catch (error) {
+            console.error("Error in fetching Todo list: ", error);
+        }
+    }, []);
+    
+    const addTodoToTodoList = async (todoListId, newTodo) => {
+        try {
+            const response = await axios.post(`/api/addTodo/${todoListId}`, newTodo);
+            fetchTodoLists();
+            console.log("Todo added: ", response.data);
+        }
+        catch (error) {
+            console.error("Error in add todo to todo list :: ", error);
+        }
+    }
+    
+    const postData = useCallback(async ({ todos }) => {
+        try {
+            const response = await axios.post("/api/registerTodo", { todos });
+            console.log("Registering new todo list successfully: ", response);
+            
+            await fetchTodoLists();
+        } catch (error) {
+            console.log("Error in post todo", error);
+        }
+    }, [fetchTodoLists]);
+
+    
+    const deleteTodoList = useCallback(async (id) => {
+        try {        
+            const response = await axios.post('/api/deleteTodoList',id);
+            console.log("Successfully deleted todo list: ",response);
+            return response;
+        } catch (error) {
+            console.log("Delete Todo list ERROR :: ", error);
+        }
+    },[fetchTodoLists]);
+
+    
+    
+    useEffect(() => {
+        const init = async () => {
+            await fetchTodoLists();
+        }
+        init();
+    }, [fetchTodoLists,deleteTodoList]);
+
+    return (
+        <GlobalContext.Provider value={{ todoLists, postData, addTodoToTodoList, fetchTodoLists, deleteTodoList}}>
+            {children}
+        </GlobalContext.Provider>
+    );
+};
+
+export const useGlobalContext = () => {
+    return useContext(GlobalContext);
+};

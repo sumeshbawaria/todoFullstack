@@ -1,6 +1,6 @@
+import { v4 as uuidv4 } from "uuid";
 import { Todo } from "../model/todo.model.js";
 import { Todolist } from "../model/todoList.model.js";
-import { v4 as uuidv4 } from "uuid";
 
 const registerTodos = async (req, res) => {
     const { todos } = req.body;
@@ -69,4 +69,26 @@ const fetchTodoLists = async (req, res) => {
     }
 }
 
-export { registerTodos, fetchTodos, fetchTodoLists }; 
+const deleteTodoList = async (req, res) => {
+
+    const { id } = req.body;
+
+    try {
+        const deletingListResponse = await Todolist.deleteOne({ todoListId: id });
+        const deletingTodoResponse = await Todo.deleteMany({ todoListId: id })
+        console.log(deletingListResponse);
+        console.log(deletingTodoResponse);
+
+
+        res.status(200).json({
+            success: true,
+            deletedList: deletingListResponse,
+            deletedTodos: deletingTodoResponse
+        });
+    } catch (error) {
+        console.error("Error in deletingTodoList controller :: ", error);
+        res.status(500).json({ success: false, error: error.message })
+    }
+}
+
+export { registerTodos, fetchTodos, fetchTodoLists, deleteTodoList }; 
