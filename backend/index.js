@@ -15,7 +15,6 @@ app.use(cors({
     credentials: true
 }))
 
-app.use(cors());
 app.use(express.json({ limit: "16kb" })); // to parse JSON request body
 
 app.get("/", (req, res) => {
