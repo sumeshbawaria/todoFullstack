@@ -41,23 +41,36 @@ export const GlobalTodoProvider = ({ children }) => {
         try {        
             const response = await axios.post('/api/deleteTodoList',id);
             console.log("Successfully deleted todo list: ",response);
+
+            await fetchTodoLists();
+
             return response;
         } catch (error) {
             console.log("Delete Todo list ERROR :: ", error);
         }
     },[fetchTodoLists]);
 
-    
-    
+    const updateTodo = useCallback(async(todos) => { 
+        // console.log("Here in updateTodo globalcontext: ",todo.updatedTodo);
+        
+        try {
+            const response = await axios.post("/api/updateTodo",{todosForUpdating: todos})
+
+            return response
+        } catch (error) {
+            console.error("Updating todo errr :: ",error);
+        }
+    },[fetchTodoLists]) 
+
     useEffect(() => {
         const init = async () => {
             await fetchTodoLists();
         }
         init();
-    }, [fetchTodoLists,deleteTodoList]);
+    }, [fetchTodoLists]);
 
     return (
-        <GlobalContext.Provider value={{ todoLists, postData, addTodoToTodoList, fetchTodoLists, deleteTodoList}}>
+        <GlobalContext.Provider value={{ todoLists, postData, addTodoToTodoList, fetchTodoLists, deleteTodoList, updateTodo}}>
             {children}
         </GlobalContext.Provider>
     );

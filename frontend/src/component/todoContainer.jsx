@@ -3,7 +3,6 @@ import axios, { toFormData } from 'axios';
 import ShowTodo from './ShowTodo';
 import cancel from '../assets/cancel.svg';
 import { ToDoContainerProvider } from '../context/ToDoContainerContext';
-import delete_icon from '../assets/delete_icon.png'
 import { useGlobalContext } from '../context/globalContext';
 
 function TodoContainer({todo}) {
@@ -16,7 +15,7 @@ function TodoContainer({todo}) {
     const [deletedTodos, setDeletedTodos] = useState([]);
     const [confirmDelete, setConfirmDelete] = useState(false);
 
-    const {deleteTodoList} = useGlobalContext();
+    const {deleteTodoList, updateTodo} = useGlobalContext();
 
 
     const onChangeTodo = (id, value) => {
@@ -87,21 +86,29 @@ function TodoContainer({todo}) {
             }
     }
 
-    const handleSave = () => {
+    const handleSave = async() => {
+        const updatedTodo = todos.filter((currentTodo) => 
+            initialTodos.some((todo) => 
+                todo._id === currentTodo._id && 
+                (currentTodo.task !== todo.task || 
+                currentTodo.completed !== todo.completed)
+            )
+        );
 
-        const updatedTodo = todos.filter((currentTodo) => initialTodos.some((todo) => todo._id === currentTodo._id && currentTodo.task !== todo.task || currentTodo.completed !== todo.completed));
-
-        setChangeTodos(updatedTodo.map((prev) => prev));
-
-        changesTodos.length > 0 &&
-        changesTodos.map((todo) => {
-            console.log("Inside changedTodo: ",todo);
-        })
-
-        deletedTodos.map((todos) => {
-            console.log(todos);
+        try {
+            const response = await updateTodo(updatedTodo);
+            console.log("response: ",response);
             
-        })
+        } catch (error) {
+            console.error(error);            
+        }
+        setChangesMade(false);
+        gettingTodo(todo);
+
+        // deletedTodos.map((todos) => {
+        //     console.log(todos);
+            
+        // })
 
     }
 
@@ -113,7 +120,7 @@ function TodoContainer({todo}) {
             <ToDoContainerProvider value={{todos,onChangeTodo,onToggleTodo,onDeleteTodo}}>
             <div onClick={handleExpand}>
                 { checkExpand ?            
-                <div className='fixed top-0 left-0 w-full h-full bg-[#2c2c2c] z-40 flex flex-row items-center justify-center rounded-xl'>
+                <div className='fixed top-0 left-0 w-full h-full bg-[#2c2c2c] z-40 flex flex-row items-center justify-center'>
                     <div className='border-1 border-gray-600 opacity-100 h-fit max-h-4/5 w-[600px] my-2 scrollable-container rounded-md relative z-40 overflow-y-auto transition-h duration-1000 delay-500' onClick={(e) => e.stopPropagation()}>
                     <div className='sticky top-0 right-0 flex justify-end bg-gray-600 p-1 mb-2'>
                         <button className='mx-2 py-1 px-2 rounded-lg hover:cursor-pointer hover:bg-gray-500' onClick={()=>setConfirmDelete(true)}>DELETE</button>
@@ -129,7 +136,6 @@ function TodoContainer({todo}) {
                             <ShowTodo key={todo._id} todo={todo} showOnly={false}/>
                         )
                     )
-                    
                     : (
                         <p>No Todos Found</p>
                     )
@@ -144,7 +150,7 @@ function TodoContainer({todo}) {
                 )}
                     </div>
                     {confirmDelete &&                 
-                    <div className='fixed flex justify-center items-center  w-full h-full bg-[#1a1a1a] z-50'onClick={closeDeleteConfirmation}>
+                    <div className='fixed flex justify-center items-center  w-full h-full bg-[#1a1a1a] z-50 'onClick={closeDeleteConfirmation}>
                             <div className=' border border-gray-600 rounded-xl w-[600px]'>
                                 <h1 className='bg-gray-600 p-2 rounded-t-lg'>Confirm Delete</h1>
                                 <div className='pt-3'>

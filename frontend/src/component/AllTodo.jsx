@@ -12,11 +12,11 @@ function AllTodo() {
     },[fetchTodoLists])
 
     return (
-        <div className='flex justify-center items-center'>
-            <div className='columns-1 sm:columns-2 md:columns-3 lg:columns-4 xl:columns-5 gap-0 space-y-4 m-2'>
+        <div className='flex justify-center items-center mt-2'>
+            <div className='columns-1 sm:columns-2 md:columns-3 lg:columns-4 xl:columns-5 gap-0 space-y-4 my-2'>
                 {
                     todoLists.map((item, index) => 
-                        <div key={item.todoListId || index} className='my-1 m-1 h-fit flex justify-center'>
+                        <div key={item.todoListId || index} className='mx-2 h-fit flex justify-center'>
                             <TodoContainer todo={item.todoListId} onRefresh={fetchTodoLists}/>
                         </div>
                     )

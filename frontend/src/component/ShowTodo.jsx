@@ -13,8 +13,14 @@ function ShowTodo({todo,showOnly}) {
     const handleChange = (e) => {
         onChangeTodo(todo._id, e.target.value);
     };
-    const handleBlur = () => {};
-    const handleKeyDown = () => {};
+    const handleBlur = () => {
+
+    };
+    const handleKeyDown = (e) => {
+        if(e.key === "Enter"){
+            e.target.blur();
+        }
+    };
     const remove = () => {
         onDeleteTodo(todo._id)
     };
