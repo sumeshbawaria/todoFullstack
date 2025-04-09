@@ -115,4 +115,32 @@ const updateTodo = async (req, res) => {
     }
 }
 
-export { registerTodos, fetchTodos, fetchTodoLists, deleteTodoList, updateTodo }; 
+const deleteTodosFromDb = async (req, res) => {
+    const { todos } = req.body;
+    try {
+        for (const id of todos) {
+            await Todo.findByIdAndDelete(
+                {
+                    _id: id
+                }
+            )
+        }
+        console.log("Successfully Delted Todo from database");
+        return res.status(200)
+            .json("Successfully deleted the todos from database");
+    } catch (error) {
+        console.error("Deleting todos from database :: ERR :: ", error);
+        return res
+            .status(500)
+            .json("Error while deleting todos from database")
+    }
+}
+
+export {
+    registerTodos,
+    fetchTodos,
+    fetchTodoLists,
+    deleteTodoList,
+    updateTodo,
+    deleteTodosFromDb
+}; 

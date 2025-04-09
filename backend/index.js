@@ -8,7 +8,7 @@ dotenv.config({
 })
 
 const app = express();
-const port = 3500;
+const port = process.env.PORT;
 
 app.use(cors({
     origin: process.env.CORS_ORIGIN,
@@ -21,12 +21,6 @@ app.use(express.json({ limit: "16kb" })); // to parse JSON request body
 app.get("/", (req, res) => {
     res.send("server ready")
 })
-// app.post("/api/registerTodos", (req, res) => {
-//     const response = req.body;
-//     console.log(response);
-
-//     res.send(response)
-// })
 
 import router from './router/todoRouter.routes.js'
 

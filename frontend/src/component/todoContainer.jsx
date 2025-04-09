@@ -15,7 +15,7 @@ function TodoContainer({todo}) {
     const [deletedTodos, setDeletedTodos] = useState([]);
     const [confirmDelete, setConfirmDelete] = useState(false);
 
-    const {deleteTodoList, updateTodo} = useGlobalContext();
+    const {deleteTodoList, updateTodo, deleteTodos} = useGlobalContext();
 
 
     const onChangeTodo = (id, value) => {
@@ -94,21 +94,25 @@ function TodoContainer({todo}) {
                 currentTodo.completed !== todo.completed)
             )
         );
-
-        try {
-            const response = await updateTodo(updatedTodo);
-            console.log("response: ",response);
-            
-        } catch (error) {
-            console.error(error);            
+        if(updatedTodo.length > 0){
+            try {
+                const response = await updateTodo(updatedTodo);
+                console.log("response: ",response);
+            } catch (error) {
+                console.error(error);            
+            }
+            setChangesMade(false);
+            gettingTodo(todo);
         }
-        setChangesMade(false);
-        gettingTodo(todo);
 
-        // deletedTodos.map((todos) => {
-        //     console.log(todos);
-            
-        // })
+        if(deletedTodos.length > 0){
+            try {
+                const response = await deleteTodos(deletedTodos);
+                console.log(response);  
+            } catch (error) {
+                console.error("deleteTodos todocontainer :: ERR :: ",error);                
+            }          
+        }
 
     }
 
@@ -121,7 +125,7 @@ function TodoContainer({todo}) {
             <div onClick={handleExpand}>
                 { checkExpand ?            
                 <div className='fixed top-0 left-0 w-full h-full bg-[#2c2c2c] z-40 flex flex-row items-center justify-center'>
-                    <div className='border-1 border-gray-600 opacity-100 h-fit max-h-4/5 w-[600px] my-2 scrollable-container rounded-md relative z-40 overflow-y-auto transition-h duration-1000 delay-500' onClick={(e) => e.stopPropagation()}>
+                    <div className='border-1 border-gray-600 opacity-100 h-fit max-h-4/5 w-[600px] my-2 scrollable-container rounded-md relative z-100 overflow-y-auto transition-h duration-1000 delay-500' onClick={(e) => e.stopPropagation()}>
                     <div className='sticky top-0 right-0 flex justify-end bg-gray-600 p-1 mb-2'>
                         <button className='mx-2 py-1 px-2 rounded-lg hover:cursor-pointer hover:bg-gray-500' onClick={()=>setConfirmDelete(true)}>DELETE</button>
                         <button className='mx-2 py-1 px-2 rounded-lg hover:cursor-pointer hover:bg-gray-500' onClick={handleSave}>SAVE</button>
