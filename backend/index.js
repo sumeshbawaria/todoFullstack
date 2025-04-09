@@ -35,7 +35,7 @@ app.use("/api", router)
 connect_db()
     .then(
         app.listen(port, () => {
-            console.log(`port number is: ${port}`);
+            console.log(`PORT NUMBER is: ${port}`);
         })
     )
     .catch((error) => {

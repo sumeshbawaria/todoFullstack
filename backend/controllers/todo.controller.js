@@ -91,4 +91,28 @@ const deleteTodoList = async (req, res) => {
     }
 }
 
-export { registerTodos, fetchTodos, fetchTodoLists, deleteTodoList }; 
+const updateTodo = async (req, res) => {
+    const { todosForUpdating } = req.body;
+
+    try {
+        for (const todos of todosForUpdating) {
+            await Todo.updateOne(
+                { _id: todos._id },
+                {
+                    $set: {
+                        task: todos.task,
+                        completed: todos.completed
+                    }
+                }
+            )
+        };
+        console.log("Succefully updated values");
+        return res.status(200)
+            .json("success")
+    } catch (error) {
+        console.error("Error in updating todos: ", error);
+        return res.status(500).json({ error: "Failed to update todos" })
+    }
+}
+
+export { registerTodos, fetchTodos, fetchTodoLists, deleteTodoList, updateTodo }; 
