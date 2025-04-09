@@ -7,7 +7,7 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        target: "https://todofullstack-f83z.onrender.com",
+        target: https://todofullstack-f83z.onrender.com,
         changeOrigin: true,
         secure: false
       }
