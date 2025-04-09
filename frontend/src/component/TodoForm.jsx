@@ -23,7 +23,7 @@ const TodoForm = forwardRef((props, ref)=> {
 
         if(!trimmedTodo)return
 
-        addTodo({todo: trimmedTodo, completed: false});
+        addTodo({task: trimmedTodo, completed: false});
         setTodo('')
     }
 

@@ -5,3 +5,7 @@ body{
     color: whitesmoke;
     font-family: poppins;
 }
+
+.scrollable-container{
+    scrollbar-width: thin;
+}
