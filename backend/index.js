@@ -11,7 +11,7 @@ const app = express();
 const port = process.env.PORT;
 
 app.use(cors({
-    origin: process.env.CORS_ORIGIN,
+    origin: "https://todofullstack-f83z.onrender.com",
     credentials: true
 }))
 
