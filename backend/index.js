@@ -11,7 +11,7 @@ const app = express();
 const port = process.env.PORT;
 
 app.use(cors({
-    origin: "todo-fullstack-bnug-git-main-sumesh-bawarias-projects.vercel.app",
+    origin: "https://todo-fullstack-bnug-git-main-sumesh-bawarias-projects.vercel.app",
     credentials: true
 }))
 
