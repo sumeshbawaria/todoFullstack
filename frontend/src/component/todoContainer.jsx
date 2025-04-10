@@ -38,7 +38,7 @@ function TodoContainer({todo}) {
 
     const gettingTodo = async(todo) => {
         try {
-            const response = await axios.get(`/api/fetchTodos`,
+            const response = await axios.get(`https://todofullstack-f83z.onrender.com/api/fetchTodos`,
                 {params: {id:todo}}
             )
             setTodos(response.data);
@@ -101,6 +101,7 @@ function TodoContainer({todo}) {
             } catch (error) {
                 console.error(error);            
             }
+            updatedTodo([])
             setChangesMade(false);
             gettingTodo(todo);
         }
