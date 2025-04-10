@@ -101,6 +101,7 @@ function TodoContainer({todo}) {
             } catch (error) {
                 console.error(error);            
             }
+            updatedTodo([])
             setChangesMade(false);
             gettingTodo(todo);
         }
