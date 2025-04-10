@@ -7,7 +7,7 @@ export const GlobalTodoProvider = ({ children }) => {
 
     const fetchTodoLists = useCallback(async () => {
         try {
-            const response = await axios.get("/api/fetchTodoLists");
+            const response = await axios.get("https://todofullstack-f83z.onrender.com/api/fetchTodoLists");
             setTodoLists(response.data);
         } catch (error) {
             console.error("Error in fetching Todo list: ", error);
@@ -16,7 +16,7 @@ export const GlobalTodoProvider = ({ children }) => {
     
     const addTodoToTodoList = async (todoListId, newTodo) => {
         try {
-            const response = await axios.post(`/api/addTodo/${todoListId}`, newTodo);
+            const response = await axios.post(`https://todofullstack-f83z.onrender.com/api/addTodo/${todoListId}`, newTodo);
             fetchTodoLists();
             console.log("Todo added: ", response.data);
         }
@@ -27,7 +27,7 @@ export const GlobalTodoProvider = ({ children }) => {
     
     const postData = useCallback(async ({ todos }) => {
         try {
-            const response = await axios.post("/api/registerTodo", { todos });
+            const response = await axios.post("https://todofullstack-f83z.onrender.com/api/registerTodo", { todos });
             console.log("Registering new todo list successfully: ", response);
             
             await fetchTodoLists();
@@ -39,7 +39,7 @@ export const GlobalTodoProvider = ({ children }) => {
     
     const deleteTodoList = useCallback(async (id) => {
         try {        
-            const response = await axios.post('/api/deleteTodoList',id);
+            const response = await axios.post('https://todofullstack-f83z.onrender.com/api/deleteTodoList',id);
             console.log("Successfully deleted todo list: ",response);
 
             await fetchTodoLists();
@@ -54,7 +54,7 @@ export const GlobalTodoProvider = ({ children }) => {
         // console.log("Here in updateTodo globalcontext: ",todo.updatedTodo);
         
         try {
-            const response = await axios.post("/api/updateTodo",{todosForUpdating: todos})
+            const response = await axios.post("https://todofullstack-f83z.onrender.com/api/updateTodo",{todosForUpdating: todos})
             return response
         } catch (error) {
             console.error("Updating todo errr :: ",error);
@@ -63,7 +63,7 @@ export const GlobalTodoProvider = ({ children }) => {
 
     const deleteTodos = useCallback(async(todos) => {
         try {
-            const response = axios.post("/api/deleteTodosFromDB",{todos});
+            const response = axios.post("https://todofullstack-f83z.onrender.com/api/deleteTodosFromDB",{todos});
             return response;            
         } catch (error) {
             return error;
