@@ -9,13 +9,25 @@ dotenv.config({
 
 const app = express();
 const port = process.env.PORT;
+const allowedOrigins = [
+    "http://localhost:5173",
+    "https://todo-fullstack-bnug-git-main-sumesh-bawarias-projects.vercel.app"
+];
 
 app.use(cors({
-    origin: process.env.CORS_ORIGIN,
+    origin: function (origin, callback) {
+        // allow requests with no origin (like mobile apps or curl)
+        if (!origin) return callback(null, true);
+        if (allowedOrigins.includes(origin)) {
+            return callback(null, true);
+        } else {
+            return callback(new Error("Not allowed by CORS"));
+        }
+    },
     credentials: true
-}))
+}));
 
-app.use(cors());
+
 app.use(express.json({ limit: "16kb" })); // to parse JSON request body
 
 app.get("/", (req, res) => {
