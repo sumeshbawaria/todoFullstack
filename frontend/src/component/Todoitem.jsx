@@ -4,9 +4,6 @@ import cancel from '../assets/cancel.svg';
 
 function Todoitem({todo}) {
 
-    // console.log("Inside todoitems: ",typeof todo);
-    const [checkCompleted, setCheckCompleted] = useState('')
-
     const {deleteTodo, toggleComplete, changeTodo} = useTodo();
 
     const remove = () => {
