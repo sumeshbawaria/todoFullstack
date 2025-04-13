@@ -9,21 +9,9 @@ dotenv.config({
 
 const app = express();
 const port = process.env.PORT;
-const allowedOrigins = [
-    "http://localhost:5173",
-    "https://todo-fullstack-bnug-git-main-sumesh-bawarias-projects.vercel.app"
-];
 
 app.use(cors({
-    origin: function (origin, callback) {
-        // allow requests with no origin (like mobile apps or curl)
-        if (!origin) return callback(null, true);
-        if (allowedOrigins.includes(origin)) {
-            return callback(null, true);
-        } else {
-            return callback(new Error("Not allowed by CORS"));
-        }
-    },
+    origin: 'https://your-frontend-url.vercel.app',
     credentials: true
 }));
 
